@@ -18,7 +18,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/Papipo/jsonmodel"
   gem.license = "MIT"
   gem.summary = %Q{Dynamic Active Model compliant models via JSON Schema}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.description = %Q{This gem allows you to create dynamic classes (models) based on a JSON Schema, providing validations and being compliant with ActiveModel.}
   gem.email = "papipo@gmail.com"
   gem.authors = ["Rodrigo Alvarez"]
   # dependencies defined in Gemfile

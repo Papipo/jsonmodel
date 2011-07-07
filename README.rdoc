@@ -1,6 +1,7 @@
 = jsonmodel
 
-Description goes here.
+This gem allows you to create dynamic classes (models) based on a JSON Schema, providing validations and being compliant with ActiveModel.
+You can check the tests to get an idea about how it works.
 
 == Contributing to jsonmodel
  
@@ -16,4 +17,3 @@ Description goes here.
 
 Copyright (c) 2011 Rodrigo Alvarez. See LICENSE.txt for
 further details.
-

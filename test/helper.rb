@@ -12,6 +12,10 @@ require 'test/unit'
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'jsonmodel'
+require 'active_support/json'
 
 class Test::Unit::TestCase
+  def schema(filename)
+    ActiveSupport::JSON.decode File.read(File.dirname(__FILE__) + '/schemas/' + filename)
+  end
 end
