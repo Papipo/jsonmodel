@@ -33,6 +33,7 @@ class TestJSONModel < Test::Unit::TestCase
         }
       } 
     )
+    
     @instance = @model.new(
       :name => 'MacBook',
       :price => 999,
