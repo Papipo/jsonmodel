@@ -14,7 +14,7 @@
     "price":{
       "required":true,
       "type": "number",
-      "minimum":0,
+      "minimum":0
     },
     "tags":{
       "type":"array",
