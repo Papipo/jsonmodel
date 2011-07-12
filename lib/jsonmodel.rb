@@ -2,6 +2,7 @@
 require 'active_model'
 
 module JSONModel
+  require 'jsonmodel/types'
   require 'jsonmodel/validations'
   require 'jsonmodel/attributes'
   require 'jsonmodel/persistence'

@@ -14,6 +14,13 @@ module JSONModel::Validations
     end
   end
   
+  class ArrayValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      record.errors[attribute] << :not_an_array and return unless value.is_a?(Array)
+      record.errors[attribute] << :invalid_item_type unless value.all? { |item| item.is_a?(JSONModel::Types[options[:type]]) } if options[:type]
+    end
+  end
+  
   module ClassMethods
     protected
     def setup_validations!
@@ -25,8 +32,22 @@ module JSONModel::Validations
     end
   
     def apply_validations_for(name, data)
-      validates_presence_of(name) if data['required']
-      validates_numericality_of(name, options_for_numericality(data)) if data['type'] == 'number'
+      validates(name, :presence => true) if data['required']
+      
+      case data['type']
+      when 'number'
+        validates name, :numericality => options_for_numericality(data)
+      when 'array'
+        validates name, :array => options_for_array(data)
+      end
+    end
+    
+    def options_for_array(data)
+      if data['items'] && data['items']['type']
+        {:type => data['items']['type']}
+      else
+        {}
+      end
     end
   
     def options_for_numericality(data)

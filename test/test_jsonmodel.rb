@@ -30,6 +30,12 @@ class TestJSONModel < Test::Unit::TestCase
           "required" => true,
           "maximum" => 3,
           "exclusiveMaximum" => true
+        },
+        "tags" => {
+          "type" => "array",
+          "items" => {
+            "type" => "string"
+          }
         }
       } 
     )
@@ -39,7 +45,8 @@ class TestJSONModel < Test::Unit::TestCase
       :price => 999,
       :weight => 5,
       :ghz => 2.4,
-      :cpus => 2
+      :cpus => 2,
+      :tags => ['apple', 'laptop']
     )
   end
   
@@ -49,7 +56,8 @@ class TestJSONModel < Test::Unit::TestCase
       :price => 999,
       :weight => 5,
       :ghz => 2.4,
-      :cpus => 2
+      :cpus => 2,
+      :tags => ['apple', 'laptop']
     }, @instance.attributes)
   end
   
@@ -97,5 +105,17 @@ class TestJSONModel < Test::Unit::TestCase
     @instance.cpus = 3
     assert !@instance.valid?
     assert_equal ["must be less than 3"], @instance.errors[:cpus]
+  end
+  
+  def test_array_type
+    @instance.tags = 'test'
+    assert !@instance.valid?
+    assert_equal [:not_an_array], @instance.errors[:tags]
+  end
+  
+  def test_array_items_type
+    @instance.tags = [{"some" => "hash"}]
+    assert !@instance.valid?
+    assert_equal [:invalid_item_type], @instance.errors[:tags]
   end
 end
