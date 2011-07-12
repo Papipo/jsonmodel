@@ -28,7 +28,11 @@ module JSONModel::Validations
       end
       
       if options[:max_items]
-        record.errors.add(attribute, :too_many_items, :max_items => options[:max_items]) if value.size > options[:max_items]
+        record.errors.add(attribute, :too_many_items, :count => options[:max_items]) if value.size > options[:max_items]
+      end
+      
+      if options[:min_items]
+        record.errors.add(attribute, :too_few_items, :count => options[:min_items]) if value.size < options[:min_items]
       end
     end
   end
@@ -56,8 +60,9 @@ module JSONModel::Validations
     
     def options_for_array(data)
       options = {}
-      options[:type]      = data['items']['type'] if data['items'] && data['items']['type']
-      options[:max_items] = data['maxItems'] if data['maxItems']
+      options[:type]      = data['items'] && data['items']['type']
+      options[:max_items] = data['maxItems']
+      options[:min_items] = data['minItems']
       options
     end
   

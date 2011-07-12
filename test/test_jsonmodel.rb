@@ -34,6 +34,7 @@ class TestJSONModel < Test::Unit::TestCase
         "tags" => {
           "type" => "array",
           "maxItems" => 5,
+          "minItems" => 1,
           "items" => {
             "type" => "string"
           }
@@ -124,5 +125,11 @@ class TestJSONModel < Test::Unit::TestCase
     @instance.tags = ['one', 'two', 'three', 'four', 'five', 'toomany']
     assert !@instance.valid?
     assert_equal ["can't have more than 5 items"], @instance.errors[:tags]
+  end
+  
+  def test_array_minitems
+    @instance.tags = []
+    assert !@instance.valid?
+    assert_equal ["must have at least one item"], @instance.errors[:tags]
   end
 end

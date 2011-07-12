@@ -2,7 +2,11 @@ en:
   activemodel:
     errors:
       messages:
-        too_many_items: can't have more than %{max_items} items
+        too_many_items:
+          one: can't have more than one item
+          other: can't have more than %{count} items
+        too_few_items:
+           one: must have at least one item
+           other: must have more than %{count} items
         not_an_array: must be an array
         invalid_item_type: has invalid items
-        not_an_array: must be an array
