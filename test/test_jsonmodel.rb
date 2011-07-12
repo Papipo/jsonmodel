@@ -26,7 +26,7 @@ class TestJSONModel < Test::Unit::TestCase
           "maximum" => 2.4
         },
         "cpus" => {
-          "type" => "number",
+          "type" => "integer",
           "required" => true,
           "maximum" => 3,
           "exclusiveMaximum" => true
@@ -89,6 +89,12 @@ class TestJSONModel < Test::Unit::TestCase
     @instance.price = 'g'
     assert !@instance.valid?
     assert_equal ["is not a number"], @instance.errors[:price]
+  end
+  
+  def test_integer
+    @instance.cpus = 0.5
+    assert !@instance.valid?
+    assert_equal ["must be an integer"], @instance.errors[:cpus]
   end
   
   def test_minimum_number

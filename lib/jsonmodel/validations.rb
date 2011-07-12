@@ -47,16 +47,16 @@ module JSONModel::Validations
       @_validations_setup = true
     end
   
-    def apply_validations_for(name, data)
-      validates(name, :presence => true) if data['required']
+    def apply_validations_for(property, data)
+      validates(property, :presence => true) if data['required']
       
       case data['type']
       when 'string'
-        validates name, :format => {:with => data['pattern']} if data['pattern']
-      when 'number'
-        validates name, :numericality => options_for_numericality(data)
+        validates property, :format => {:with => data['pattern']} if data['pattern']
+      when 'number', 'integer'
+        validates property, :numericality => options_for_numericality(data)
       when 'array'
-        validates name, :array => options_for_array(data)
+        validates property, :array => options_for_array(data)
       end
     end
     
@@ -69,21 +69,22 @@ module JSONModel::Validations
     end
   
     def options_for_numericality(data)
+      options = {}
       if data['minimum']
         if data['exclusiveMinimum']
-          {:greater_than => data['minimum']}
+          options[:greater_than] = data['minimum']
         else
-          {:greater_than_or_equal_to => data['minimum']}
+          options[:greater_than_or_equal_to] = data['minimum']
         end
       elsif data['maximum']
         if data['exclusiveMaximum']
-          {:less_than => data['maximum']}
+          options[:less_than] = data['maximum']
         else
-          {:less_than_or_equal_to => data['maximum']}
+          options[:less_than_or_equal_to] = data['maximum']
         end
-      else
-        {}
       end
+      options[:only_integer] = true if data['type'] == 'integer'
+      options
     end
   end
 end
