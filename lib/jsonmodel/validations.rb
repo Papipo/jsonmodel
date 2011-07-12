@@ -51,6 +51,8 @@ module JSONModel::Validations
       validates(name, :presence => true) if data['required']
       
       case data['type']
+      when 'string'
+        validates name, :format => {:with => data['pattern']} if data['pattern']
       when 'number'
         validates name, :numericality => options_for_numericality(data)
       when 'array'

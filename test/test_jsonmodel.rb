@@ -38,6 +38,10 @@ class TestJSONModel < Test::Unit::TestCase
           "items" => {
             "type" => "string"
           }
+        },
+        "ean" => {
+          "type" => "string",
+          "pattern" => /^[0-9]{13}$/
         }
       } 
     )
@@ -48,7 +52,8 @@ class TestJSONModel < Test::Unit::TestCase
       :weight => 5,
       :ghz => 2.4,
       :cpus => 2,
-      :tags => ['apple', 'laptop']
+      :tags => ['apple', 'laptop'],
+      :ean => '0012345678905'
     )
   end
   
@@ -59,7 +64,8 @@ class TestJSONModel < Test::Unit::TestCase
       :weight => 5,
       :ghz => 2.4,
       :cpus => 2,
-      :tags => ['apple', 'laptop']
+      :tags => ['apple', 'laptop'],
+      :ean => '0012345678905'
     }, @instance.attributes)
   end
   
@@ -131,5 +137,11 @@ class TestJSONModel < Test::Unit::TestCase
     @instance.tags = []
     assert !@instance.valid?
     assert_equal ["must have at least one item"], @instance.errors[:tags]
+  end
+  
+  def test_pattern
+    @instance.ean = '34'
+    assert !@instance.valid?
+    assert_equal ["is invalid"], @instance.errors[:ean]
   end
 end
