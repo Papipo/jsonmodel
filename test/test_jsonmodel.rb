@@ -33,6 +33,7 @@ class TestJSONModel < Test::Unit::TestCase
         },
         "tags" => {
           "type" => "array",
+          "maxItems" => 5,
           "items" => {
             "type" => "string"
           }
@@ -110,12 +111,18 @@ class TestJSONModel < Test::Unit::TestCase
   def test_array_type
     @instance.tags = 'test'
     assert !@instance.valid?
-    assert_equal [:not_an_array], @instance.errors[:tags]
+    assert_equal ["must be an array"], @instance.errors[:tags]
   end
   
   def test_array_items_type
     @instance.tags = [{"some" => "hash"}]
     assert !@instance.valid?
-    assert_equal [:invalid_item_type], @instance.errors[:tags]
+    assert_equal ["has invalid items"], @instance.errors[:tags]
+  end
+  
+  def test_array_maxitems
+    @instance.tags = ['one', 'two', 'three', 'four', 'five', 'toomany']
+    assert !@instance.valid?
+    assert_equal ["can't have more than 5 items"], @instance.errors[:tags]
   end
 end

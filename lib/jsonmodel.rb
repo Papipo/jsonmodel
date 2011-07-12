@@ -1,5 +1,8 @@
 # require 'active_model/naming'
 require 'active_model'
+require 'i18n'
+
+I18n.load_path << File.join(File.dirname(__FILE__), "config", "locales", "en.yml")
 
 module JSONModel
   require 'jsonmodel/types'

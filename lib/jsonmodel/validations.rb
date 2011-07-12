@@ -16,8 +16,20 @@ module JSONModel::Validations
   
   class ArrayValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      record.errors[attribute] << :not_an_array and return unless value.is_a?(Array)
-      record.errors[attribute] << :invalid_item_type unless value.all? { |item| item.is_a?(JSONModel::Types[options[:type]]) } if options[:type]
+      unless value.is_a?(Array)
+        record.errors.add(attribute, :not_an_array)
+        return
+      end
+      
+      if options[:type]
+        record.errors.add(attribute, :invalid_item_type) unless value.all? do |item|
+          item.is_a?(JSONModel::Types[options[:type]])
+        end
+      end
+      
+      if options[:max_items]
+        record.errors.add(attribute, :too_many_items, :max_items => options[:max_items]) if value.size > options[:max_items]
+      end
     end
   end
   
@@ -43,11 +55,10 @@ module JSONModel::Validations
     end
     
     def options_for_array(data)
-      if data['items'] && data['items']['type']
-        {:type => data['items']['type']}
-      else
-        {}
-      end
+      options = {}
+      options[:type]      = data['items']['type'] if data['items'] && data['items']['type']
+      options[:max_items] = data['maxItems'] if data['maxItems']
+      options
     end
   
     def options_for_numericality(data)
