@@ -21,7 +21,7 @@ module JSONModel::Attributes
   
   module ClassMethods
     def attribute_names
-      @attribute_names ||= @_schema['properties'].keys.map(&:to_sym)
+      @attribute_names ||= schema['properties'].keys.map(&:to_sym)
     end
   end
 end

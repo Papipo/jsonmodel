@@ -2,49 +2,7 @@ require 'helper'
 
 class TestJSONModel < Test::Unit::TestCase
   def setup
-    @model = JSONModel.from_hash(
-      "name" => "Product",
-      "properties" => {
-        "name" => {
-          "type" => "string",
-          "required" => true
-        },
-        "price" => {
-          "type" => "number",
-          "required" => true,
-          "minimum" => 0
-        },
-        "weight" => {
-          "type" => "number",
-          "required" => true,
-          "minimum" => 0,
-          "exclusiveMinimum" => true
-        },
-        "ghz" => {
-          "type" => "number",
-          "required" => true,
-          "maximum" => 2.4
-        },
-        "cpus" => {
-          "type" => "integer",
-          "required" => true,
-          "maximum" => 3,
-          "exclusiveMaximum" => true
-        },
-        "tags" => {
-          "type" => "array",
-          "maxItems" => 5,
-          "minItems" => 1,
-          "items" => {
-            "type" => "string"
-          }
-        },
-        "ean" => {
-          "type" => "string",
-          "pattern" => /^[0-9]{13}$/
-        }
-      } 
-    )
+    @model = JSONModel.from_hash(product_schema)
     
     @instance = @model.new(
       :name => 'MacBook',
@@ -56,6 +14,7 @@ class TestJSONModel < Test::Unit::TestCase
       :ean => '0012345678905'
     )
   end
+  
   
   def test_attributes
     assert_equal({
@@ -71,6 +30,18 @@ class TestJSONModel < Test::Unit::TestCase
   
   def test_class_name
     assert_equal "Product", @model.name
+  end
+  
+  def test_name_constantize
+    assert_equal @model, @model.name.constantize
+  end
+  
+  def test_validators_on
+    assert_equal 1, @model.validators_on(:name).count
+  end
+  
+  def test_validators
+    assert @model.validators.count > 1
   end
   
   def test_accessors

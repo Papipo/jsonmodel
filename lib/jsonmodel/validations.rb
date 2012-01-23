@@ -1,9 +1,21 @@
 module JSONModel::Validations
+  require 'jsonmodel/validations/array_validator'
+  
   def self.included(base)
     base.class_eval do
       include ActiveModel::Validations
       include InstanceMethods # Need to do it this way so valid?() can call super from ActiveModel
       extend ClassMethods
+      
+      def self.validators_on(*args)
+        setup_validations!
+        super
+      end
+      
+      def self.validators(*args)
+        setup_validations!
+        super
+      end
     end
   end
       
@@ -14,34 +26,11 @@ module JSONModel::Validations
     end
   end
   
-  class ArrayValidator < ActiveModel::EachValidator
-    def validate_each(record, attribute, value)
-      unless value.is_a?(Array)
-        record.errors.add(attribute, :not_an_array)
-        return
-      end
-      
-      if options[:type]
-        record.errors.add(attribute, :invalid_item_type) unless value.all? do |item|
-          item.is_a?(JSONModel::Types[options[:type]])
-        end
-      end
-      
-      if options[:max_items]
-        record.errors.add(attribute, :too_many_items, :count => options[:max_items]) if value.size > options[:max_items]
-      end
-      
-      if options[:min_items]
-        record.errors.add(attribute, :too_few_items, :count => options[:min_items]) if value.size < options[:min_items]
-      end
-    end
-  end
-  
   module ClassMethods
     protected
     def setup_validations!
       return if @_validations_setup
-      @_schema['properties'].each do |name,data|
+      schema['properties'].each do |name,data|
         apply_validations_for(name.to_sym, data)
       end
       @_validations_setup = true
