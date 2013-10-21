@@ -9,7 +9,6 @@ module JSONModel::Attributes
     attributes.each do |attribute, value|
       send("#{attribute}=", value)
     end
-    super
   end
   
   def attributes
